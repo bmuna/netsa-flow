@@ -1,0 +1,42 @@
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: netsaflow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: security_lab
+      POSTGRES_USER: security_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U security_user -d security_lab"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: netsaflow-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  postgres_data:
+    external: true
+    name: ac34971230d6c65a66b69d819da6f70bda7b9a047c5bb9477de3c65ab3fc9740
+
+  redis_data:
+    external: true
+    name: 92e7ab295daff669104741369f5e97530b62a95bb520ea4800c96f8a896ce568
