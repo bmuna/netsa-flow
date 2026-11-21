@@ -7,3 +7,5 @@ export const notificationSchema = z.object({
   subject: z.string().trim().min(1),
   message: z.string().trim().min(1),
 });
+
+export type NotificationInput = z.infer<typeof notificationSchema>;
